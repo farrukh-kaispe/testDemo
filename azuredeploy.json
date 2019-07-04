@@ -1,0 +1,782 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connections_smtp_name": {
+            "defaultValue": "smtp",
+            "type": "String"
+        },
+        "IotHubs_kspHub_name": {
+            "defaultValue": "kspHub",
+            "type": "String"
+        },
+        "connections_office365_name": {
+            "defaultValue": "office365",
+            "type": "String"
+        },
+        "connections_servicebus_name": {
+            "defaultValue": "servicebus",
+            "type": "String"
+        },
+        "workflows_kspLogicApp_name": {
+            "defaultValue": "kspLogicApp",
+            "type": "String"
+        },
+        "workflows_kspTestingApp_name": {
+            "defaultValue": "kspTestingApp",
+            "type": "String"
+        },
+        "connections_commondataservice_name": {
+            "defaultValue": "commondataservice",
+            "type": "String"
+        },
+        "connections_dynamicscrmonline_name": {
+            "defaultValue": "dynamicscrmonline",
+            "type": "String"
+        },
+        "namespaces_servicebuskaispe_name": {
+            "defaultValue": "servicebuskaispe",
+            "type": "String"
+        },
+        "databaseAccounts_kspcosmosdb_name": {
+            "defaultValue": "kspcosmosdb",
+            "type": "String"
+        },
+        "streamingjobs_kspStreamJob_name": {
+            "defaultValue": "kspStreamJob",
+            "type": "String"
+        },
+        "provisioningServices_ksp_dpsService_name": {
+            "defaultValue": "ksp-dpsService",
+            "type": "String"
+        },
+        "storageAccounts_kspsacceleratorstorage_name": {
+            "defaultValue": "kspsacceleratorstorage",
+            "type": "String"
+        },
+        "actionGroups_Application%20Insights%20Smart%20Detection_name": {
+            "defaultValue": "Application%20Insights%20Smart%20Detection",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Devices/IotHubs",
+            "apiVersion": "2018-04-01",
+            "name": "[parameters('IotHubs_kspHub_name')]",
+            "location": "eastasia",
+            "sku": {
+                "name": "F1",
+                "tier": "Free",
+                "capacity": 1
+            },
+            "properties": {
+                "operationsMonitoringProperties": {
+                    "events": {
+                        "None": "None",
+                        "Connections": "None",
+                        "DeviceTelemetry": "None",
+                        "C2DCommands": "None",
+                        "DeviceIdentityOperations": "None",
+                        "FileUploadOperations": "None",
+                        "Routes": "None"
+                    }
+                },
+                "ipFilterRules": [],
+                "eventHubEndpoints": {
+                    "events": {
+                        "retentionTimeInDays": 1,
+                        "partitionCount": 2,
+                        "partitionIds": [
+                            "0",
+                            "1"
+                        ],
+                        "path": "iothub-ehub-ksphub-1784175-d05aebd40a",
+                        "endpoint": "sb://ihsuprodhkres003dednamespace.servicebus.windows.net/"
+                    },
+                    "operationsMonitoringEvents": {
+                        "retentionTimeInDays": 1,
+                        "partitionCount": 2,
+                        "partitionIds": [
+                            "0",
+                            "1"
+                        ],
+                        "path": "iothub-ehub-ksphub-1784175-14d3995759",
+                        "endpoint": "sb://ihsuprodhkres030dednamespace.servicebus.windows.net/"
+                    }
+                },
+                "routing": {
+                    "endpoints": {
+                        "serviceBusQueues": [],
+                        "serviceBusTopics": [],
+                        "eventHubs": [],
+                        "storageContainers": []
+                    },
+                    "routes": [],
+                    "fallbackRoute": {
+                        "name": "$fallback",
+                        "source": "DeviceMessages",
+                        "condition": "true",
+                        "endpointNames": [
+                            "events"
+                        ],
+                        "isEnabled": true
+                    }
+                },
+                "storageEndpoints": {
+                    "$default": {
+                        "sasTtlAsIso8601": "PT1H",
+                        "connectionString": "",
+                        "containerName": ""
+                    }
+                },
+                "messagingEndpoints": {
+                    "fileNotifications": {
+                        "lockDurationAsIso8601": "PT1M",
+                        "ttlAsIso8601": "PT1H",
+                        "maxDeliveryCount": 10
+                    }
+                },
+                "enableFileUploadNotifications": false,
+                "cloudToDevice": {
+                    "maxDeliveryCount": 10,
+                    "defaultTtlAsIso8601": "PT1H",
+                    "feedback": {
+                        "lockDurationAsIso8601": "PT1M",
+                        "ttlAsIso8601": "PT1H",
+                        "maxDeliveryCount": 10
+                    }
+                },
+                "features": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Devices/provisioningServices",
+            "apiVersion": "2017-11-15",
+            "name": "[parameters('provisioningServices_ksp_dpsService_name')]",
+            "location": "eastasia",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "capacity": 1
+            },
+            "properties": {
+                "iotHubs": [
+                    {
+                        "name": "kspHub.azure-devices.net",
+                        "connectionString": "HostName=kspHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=****",
+                        "location": "eastasia"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2015-04-08",
+            "name": "[parameters('databaseAccounts_kspcosmosdb_name')]",
+            "location": "East Asia",
+            "tags": {
+                "defaultExperience": "Core (SQL)"
+            },
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "enableAutomaticFailover": false,
+                "enableMultipleWriteLocations": false,
+                "isVirtualNetworkFilterEnabled": false,
+                "virtualNetworkRules": [],
+                "databaseAccountOfferType": "Standard",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "locations": [
+                    {
+                        "locationName": "East Asia",
+                        "provisioningState": "Succeeded",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": false
+                    }
+                ],
+                "capabilities": []
+            }
+        },
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2019-03-01",
+            "name": "[parameters('actionGroups_Application%20Insights%20Smart%20Detection_name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "SmartDetect",
+                "enabled": true,
+                "emailReceivers": [],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": []
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2017-04-01",
+            "name": "[parameters('namespaces_servicebuskaispe_name')]",
+            "location": "East Asia",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic"
+            },
+            "properties": {
+                "provisioningState": "Succeeded",
+                "metricId": "[concat('3c66d2ba-451d-487a-87b5-ee4297b08b42:', parameters('namespaces_servicebuskaispe_name'))]",
+                "createdAt": "2019-06-18T07:33:32.317Z",
+                "updatedAt": "2019-07-04T07:26:57.62Z",
+                "serviceBusEndpoint": "[concat('https://', parameters('namespaces_servicebuskaispe_name'), '.servicebus.windows.net:443/')]",
+                "status": "Active"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "name": "[parameters('storageAccounts_kspsacceleratorstorage_name')]",
+            "location": "eastasia",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs",
+            "apiVersion": "2016-03-01",
+            "name": "[parameters('streamingjobs_kspStreamJob_name')]",
+            "location": "East Asia",
+            "properties": {
+                "sku": {
+                    "name": "Standard"
+                },
+                "outputStartMode": "JobStartTime",
+                "outputStartTime": "2019-07-03T12:37:16.793Z",
+                "eventsOutOfOrderPolicy": "Adjust",
+                "outputErrorPolicy": "Stop",
+                "eventsOutOfOrderMaxDelayInSeconds": 0,
+                "eventsLateArrivalMaxDelayInSeconds": 5,
+                "dataLocale": "en-US",
+                "compatibilityLevel": "1.1"
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_commondataservice_name')]",
+            "location": "eastasia",
+            "properties": {
+                "displayName": "info@kaisp.onmicrosoft.com",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/', parameters('connections_commondataservice_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_dynamicscrmonline_name')]",
+            "location": "eastasia",
+            "properties": {
+                "displayName": "info@kaisp.onmicrosoft.com",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/', parameters('connections_dynamicscrmonline_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_office365_name')]",
+            "location": "eastasia",
+            "properties": {
+                "displayName": "farrukh.ahmed@kaispe.com",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/', parameters('connections_office365_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_servicebus_name')]",
+            "location": "eastasia",
+            "properties": {
+                "displayName": "kspConnection",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/', parameters('connections_servicebus_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_smtp_name')]",
+            "location": "eastasia",
+            "properties": {
+                "displayName": "kspConnection",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/', parameters('connections_smtp_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_servicebuskaispe_name'), '/RootManageSharedAccessKey')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_servicebuskaispe_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_servicebuskaispe_name'), '/kspservicebusqueue')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_servicebuskaispe_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT30S",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P14D",
+                "deadLetteringOnMessageExpiration": false,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_servicebuskaispe_name'), '/oillevel')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_servicebuskaispe_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT30S",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P14D",
+                "deadLetteringOnMessageExpiration": false,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-04-01",
+            "name": "[concat(parameters('storageAccounts_kspsacceleratorstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_kspsacceleratorstorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+            "apiVersion": "2016-03-01",
+            "name": "[concat(parameters('streamingjobs_kspStreamJob_name'), '/AirCompressorInput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_kspStreamJob_name'))]"
+            ],
+            "properties": {
+                "type": "Stream",
+                "datasource": {
+                    "type": "Microsoft.Devices/IotHubs",
+                    "properties": {
+                        "iotHubNamespace": "kspHub",
+                        "sharedAccessPolicyName": "iothubowner",
+                        "endpoint": "messages/events",
+                        "consumerGroupName": "$Default"
+                    }
+                },
+                "compression": {
+                    "type": "None"
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8"
+                    }
+                },
+                "etag": "42a88fd8-f406-48df-89ba-d8e2067847c0"
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+            "apiVersion": "2016-03-01",
+            "name": "[concat(parameters('streamingjobs_kspStreamJob_name'), '/PowerBIInput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_kspStreamJob_name'))]"
+            ],
+            "properties": {
+                "type": "Stream",
+                "datasource": {
+                    "type": "Microsoft.Devices/IotHubs",
+                    "properties": {
+                        "iotHubNamespace": "kspHub",
+                        "sharedAccessPolicyName": "iothubowner",
+                        "endpoint": "messages/events",
+                        "consumerGroupName": "kspconsumergroup"
+                    }
+                },
+                "compression": {
+                    "type": "None"
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8"
+                    }
+                },
+                "etag": "7132e40f-9a12-4a69-b43e-a124feb204d1"
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "apiVersion": "2016-03-01",
+            "name": "[concat(parameters('streamingjobs_kspStreamJob_name'), '/AirCompressorOutput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_kspStreamJob_name'))]"
+            ],
+            "properties": {
+                "datasource": {
+                    "type": "Microsoft.ServiceBus/Queue",
+                    "properties": {
+                        "queueName": "kspservicebusqueue",
+                        "propertyColumns": [],
+                        "serviceBusNamespace": "servicebuskaispe",
+                        "sharedAccessPolicyName": "RootManageSharedAccessKey"
+                    }
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8",
+                        "format": "LineSeparated"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "apiVersion": "2016-03-01",
+            "name": "[concat(parameters('streamingjobs_kspStreamJob_name'), '/OilLevelOutput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_kspStreamJob_name'))]"
+            ],
+            "properties": {
+                "datasource": {
+                    "type": "Microsoft.ServiceBus/Queue",
+                    "properties": {
+                        "queueName": "oillevel",
+                        "propertyColumns": [],
+                        "serviceBusNamespace": "servicebuskaispe",
+                        "sharedAccessPolicyName": "RootManageSharedAccessKey"
+                    }
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8",
+                        "format": "LineSeparated"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "apiVersion": "2016-03-01",
+            "name": "[concat(parameters('streamingjobs_kspStreamJob_name'), '/PowerBIOutput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_kspStreamJob_name'))]"
+            ],
+            "properties": {
+                "datasource": {
+                    "type": "PowerBI",
+                    "properties": {
+                        "dataset": "AirCompressorDataset",
+                        "table": "AirCompressorDataTable",
+                        "groupId": "d4422e48-adc5-4182-ba98-df523a6401f1",
+                        "groupName": "KaispeAirCompressorMonitoring",
+                        "refreshToken": null,
+                        "accessToken": null,
+                        "tokenUserPrincipalName": "info@kaisp.onmicrosoft.com",
+                        "tokenUserDisplayName": "Imran Mahmood"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_kspLogicApp_name')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('connections_servicebus_name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('connections_smtp_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_message_is_received_in_a_queue_(peek-lock)": {
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 3
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('kspservicebusqueue'))}/messages/head/peek",
+                                "queries": {
+                                    "queueType": "Main",
+                                    "sessionId": "None"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Send_Email": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "High Frequency Detected ",
+                                    "From": "kaispeofficial@outlook.com",
+                                    "Subject": "High Frequency Detected",
+                                    "To": "farrukh.ahmed@kaispe.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['smtp']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/SendEmailV2"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "servicebus": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_servicebus_name'))]",
+                                "connectionName": "servicebus",
+                                "id": "/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/servicebus"
+                            },
+                            "smtp": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_smtp_name'))]",
+                                "connectionName": "smtp",
+                                "id": "/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/smtp"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_kspTestingApp_name')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', parameters('connections_dynamicscrmonline_name'))]",
+                "[resourceId('Microsoft.Web/connections', parameters('connections_servicebus_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_one_or_more_messages_arrive_in_a_queue_(auto-complete)": {
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 3
+                            },
+                            "splitOn": "@triggerBody()",
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('oillevel'))}/messages/batch/head",
+                                "queries": {
+                                    "maxMessageCount": 20,
+                                    "queueType": "Main"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Create_a_new_record": {
+                            "runAfter": {
+                                "Initialize_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "_msdyn_pricelist_value": "79346ca5-2ee7-e611-80f4-e0071b661f01",
+                                    "_msdyn_serviceaccount_value": "1f3b02a3-a69c-e911-a99b-000d3ab6e3a0",
+                                    "_msdyn_systemstatus_label": "",
+                                    "_msdyn_worklocation_label": "Onsite",
+                                    "_msdyn_workordertype_value": "b925f73b-a79c-e911-a99b-000d3ab6e3a0",
+                                    "_ownerid_type": "",
+                                    "_statuscode_label": "",
+                                    "msdyn_followuprequired": false,
+                                    "msdyn_isfollowup": false,
+                                    "msdyn_ismobile": false,
+                                    "msdyn_name": "@{variables('workOrderNum')}",
+                                    "msdyn_systemstatus": 690970000,
+                                    "msdyn_taxable": false
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['dynamicscrmonline']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('orgcdf025ad.crm4'))}/tables/@{encodeURIComponent(encodeURIComponent('msdyn_workorders'))}/items"
+                            }
+                        },
+                        "Initialize_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "workOrderNum",
+                                        "type": "Integer",
+                                        "value": "@triggerBody()?['SequenceNumber']"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "dynamicscrmonline": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_dynamicscrmonline_name'))]",
+                                "connectionName": "dynamicscrmonline",
+                                "id": "/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/dynamicscrmonline"
+                            },
+                            "servicebus": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_servicebus_name'))]",
+                                "connectionName": "servicebus",
+                                "id": "/subscriptions/3c66d2ba-451d-487a-87b5-ee4297b08b42/providers/Microsoft.Web/locations/eastasia/managedApis/servicebus"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues/authorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_servicebuskaispe_name'), '/kspservicebusqueue/iothubroutes_kspResourceGroup')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/queues', parameters('namespaces_servicebuskaispe_name'), 'kspservicebusqueue')]",
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_servicebuskaispe_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Send"
+                ]
+            }
+        }
+    ]
+}
