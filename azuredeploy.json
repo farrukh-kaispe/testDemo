@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "connections_smtp_name": {
-            "defaultValue": "GEN-UNIQUE",
+            "defaultValue": "smtp",
             "type": "String"
         },
         "IotHubs_kspHub_name": {
