@@ -281,7 +281,7 @@
                     "name": "Standard"
                 },
                 "outputStartMode": "JobStartTime",
-                "outputStartTime": "",
+                
                 "eventsOutOfOrderPolicy": "Adjust",
                 "outputErrorPolicy": "Stop",
                 "eventsOutOfOrderMaxDelayInSeconds": 0,
