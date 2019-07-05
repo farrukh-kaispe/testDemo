@@ -3,59 +3,59 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "connections_smtp_name": {
-            "defaultValue": "",
+            "defaultValue": "smtp",
             "type": "String"
         },
         "IotHubs_kspHub_name": {
-            "defaultValue": "",
+            "defaultValue": "kspHub",
             "type": "String"
         },
         "connections_office365_name": {
-            "defaultValue": "",
+            "defaultValue": "office365",
             "type": "String"
         },
         "connections_servicebus_name": {
-            "defaultValue": "",
+            "defaultValue": "servicebus",
             "type": "String"
         },
         "workflows_kspLogicApp_name": {
-            "defaultValue": "",
+            "defaultValue": "kspLogicApp",
             "type": "String"
         },
         "workflows_kspTestingApp_name": {
-            "defaultValue": "",
+            "defaultValue": "kspTestingApp",
             "type": "String"
         },
         "connections_commondataservice_name": {
-            "defaultValue": "",
+            "defaultValue": "commondataservice",
             "type": "String"
         },
         "connections_dynamicscrmonline_name": {
-            "defaultValue": "",
+            "defaultValue": "dynamicscrmonline",
             "type": "String"
         },
         "namespaces_servicebuskaispe_name": {
-            "defaultValue": "",
+            "defaultValue": "servicebuskaispe",
             "type": "String"
         },
         "databaseAccounts_kspcosmosdb_name": {
-            "defaultValue": "",
+            "defaultValue": "kspcosmosdb",
             "type": "String"
         },
         "streamingjobs_kspStreamJob_name": {
-            "defaultValue": "",
+            "defaultValue": "kspStreamJob",
             "type": "String"
         },
         "provisioningServices_ksp_dpsService_name": {
-            "defaultValue": "",
+            "defaultValue": "ksp-dpsService",
             "type": "String"
         },
         "storageAccounts_kspsacceleratorstorage_name": {
-            "defaultValue": "",
+            "defaultValue": "kspsacceleratorstorage",
             "type": "String"
         },
         "actionGroups_Application%20Insights%20Smart%20Detection_name": {
-            "defaultValue": "",
+            "defaultValue": "Application%20Insights%20Smart%20Detection",
             "type": "String"
         }
     },
