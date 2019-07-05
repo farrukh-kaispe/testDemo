@@ -7,7 +7,7 @@
             "type": "String"
         },
         "IotHubs_kspHub_name": {
-            "defaultValue": "kspHub7",
+            "defaultValue": "kspHub",
             "type": "String"
         },
         "connections_office365_name": {
@@ -19,11 +19,11 @@
             "type": "String"
         },
         "workflows_kspLogicApp_name": {
-            "defaultValue": "kspLogicApp7",
+            "defaultValue": "kspLogicApp",
             "type": "String"
         },
         "workflows_kspTestingApp_name": {
-            "defaultValue": "kspTestingApp7",
+            "defaultValue": "kspTestingApp",
             "type": "String"
         },
         "connections_commondataservice_name": {
@@ -35,23 +35,23 @@
             "type": "String"
         },
         "namespaces_servicebuskaispe_name": {
-            "defaultValue": "servicebuskaispe7",
+            "defaultValue": "servicebuskaispe",
             "type": "String"
         },
         "databaseAccounts_kspcosmosdb_name": {
-            "defaultValue": "kspcosmosdb7",
+            "defaultValue": "kspcosmosdb",
             "type": "String"
         },
         "streamingjobs_kspStreamJob_name": {
-            "defaultValue": "kspStreamJob7",
+            "defaultValue": "kspStreamJob",
             "type": "String"
         },
         "provisioningServices_ksp_dpsService_name": {
-            "defaultValue": "ksp-dpsService7",
+            "defaultValue": "ksp-dpsService",
             "type": "String"
         },
         "storageAccounts_kspsacceleratorstorage_name": {
-            "defaultValue": "kspsacceleratorstorage7",
+            "defaultValue": "kspsacceleratorstorage",
             "type": "String"
         },
         "actionGroups_Application%20Insights%20Smart%20Detection_name": {
