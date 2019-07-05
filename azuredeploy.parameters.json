@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connections_smtp_name": {
+            "value": null
+        },
+        "IotHubs_kspHub_name": {
+            "value": null
+        },
+        "connections_office365_name": {
+            "value": null
+        },
+        "connections_servicebus_name": {
+            "value": null
+        },
+        "workflows_kspLogicApp_name": {
+            "value": null
+        },
+        "workflows_kspTestingApp_name": {
+            "value": null
+        },
+        "connections_commondataservice_name": {
+            "value": null
+        },
+        "connections_dynamicscrmonline_name": {
+            "value": null
+        },
+        "namespaces_servicebuskaispe_name": {
+            "value": null
+        },
+        "databaseAccounts_kspcosmosdb_name": {
+            "value": null
+        },
+        "streamingjobs_kspStreamJob_name": {
+            "value": null
+        },
+        "provisioningServices_ksp_dpsService_name": {
+            "value": null
+        },
+        "storageAccounts_kspsacceleratorstorage_name": {
+            "value": null
+        },
+        "actionGroups_Application%20Insights%20Smart%20Detection_name": {
+            "value": null
+        }
+    }
+}
